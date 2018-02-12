@@ -7,10 +7,11 @@ namespace Engineering_Project.DataAccess
     public interface IAccountDataAccess
     {
         Task<bool> AddUser(UserRegisterTransmitModel model);
-        Task<bool> AddRole(ApplicationRole model);
+        Task<object> AddRole(ApplicationRole model);
         Task<bool> DeleteUser(DeleteUserTransmitModel model);
         Task<object> Authenticate(UserSignInTransmitModel model);
 //        Task<bool> ResetPassword(UserChangePasswordTrasnmitModel model);
         Task<bool> ChangeRole(AdminChangeRoleTransmitModel model);
+        Task<string> GetUserIdAsync(string userName);
     }
 } 

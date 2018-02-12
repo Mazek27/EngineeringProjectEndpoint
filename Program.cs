@@ -19,7 +19,7 @@ namespace Engineering_Project
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseKestrel()
+//                .UseKestrel()
                 .UseUrls($"http://*:{10000}")
                 .UseStartup<Startup>()
                 .Build();

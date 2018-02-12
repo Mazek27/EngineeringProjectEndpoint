@@ -30,7 +30,7 @@ namespace Engineering_Project.DataAccess
             _signInManager = signInManager;
         }
 
-        public async Task<bool> AddRole(ApplicationRole role)
+        public async Task<object> AddRole(ApplicationRole role)
         {
             IdentityResult createResult = await _roleManager.CreateAsync(role);
             IdentityResult addClaimResult =
@@ -38,11 +38,11 @@ namespace Engineering_Project.DataAccess
 
             if (createResult.Succeeded && addClaimResult.Succeeded)
             {
-                return true;
+                return addClaimResult;
             }
 
-            await _roleManager.DeleteAsync(role);
-            return false;
+            
+            return _roleManager.DeleteAsync(role);
         }
 
         public async Task<bool> AddUser(UserRegisterTransmitModel model)
@@ -77,8 +77,8 @@ namespace Engineering_Project.DataAccess
 
         public async Task<bool> ChangeRole(AdminChangeRoleTransmitModel model)
         {
-            ApplicationUser user = _userManager.FindByNameAsync(model.UserName).Result;
-            IList<string> roles = _userManager.GetRolesAsync(user).Result;
+            ApplicationUser user = await _userManager.FindByNameAsync(model.UserName);
+            IList<string> roles = await _userManager.GetRolesAsync(user);
             IdentityResult deleteResult = await _userManager.RemoveFromRolesAsync(user, roles);
             IdentityResult addResult = new IdentityResult();
             if (deleteResult.Succeeded)
@@ -87,6 +87,12 @@ namespace Engineering_Project.DataAccess
             }
 
             return addResult.Succeeded;
+        }
+
+        public async Task<string> GetUserIdAsync(string userName)
+        {
+            ApplicationUser user = await _userManager.FindByNameAsync(userName);
+            return user.Id;
         }
 
         public async Task<object> Authenticate(UserSignInTransmitModel model)

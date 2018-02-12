@@ -68,10 +68,9 @@ namespace eConService.Controllers
                 role.Id = model.Id;
                 role.Name = model.RoleName;
 
-                if (await _dataAccess.AddRole(role))
-                {
-                    return StatusCode(200, "Completed");
-                }
+                
+                return StatusCode(200, await _dataAccess.AddRole(role));
+                
                     
             }
             catch (System.Exception e)

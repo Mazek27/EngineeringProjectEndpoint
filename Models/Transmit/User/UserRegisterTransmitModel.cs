@@ -14,7 +14,7 @@ namespace Engineering_Project.Models.Transmit
         [Required]
         [DataType(DataType.Password)] 
         public string Password { get; set; }
-        
+        [Required]
         public string ApplicationRoleName { get; set; } 
         [Required]
         public string Locale { get; set; }

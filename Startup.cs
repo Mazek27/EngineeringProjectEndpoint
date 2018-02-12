@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Engineering_Project.Controllers;
 using Engineering_Project.DataAccess;
+using Engineering_Project.Models.Domian;
 using Engineering_Project.Service.Context;
+using Engineering_Project.Service.Impement;
+using Engineering_Project.Service.Interfaces;
 using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -69,6 +72,12 @@ namespace Engineering_Project
             
             services.AddTransient<IAccountDataAccess, AccountDataAccess>();
             
+            //DataAccess
+            services.AddTransient<ITrainingDataAccess, TrainingDataAccess>();
+            
+            //Services
+            services.AddTransient<ITrainingService, TrainingService>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v2", new Info {Title = "eConService Api", Version = "v2"});
@@ -77,7 +86,7 @@ namespace Engineering_Project
 //                string basePath = PlatformServices.Default.Application.ApplicationBasePath;
 //                string xmlPath = Path.Combine(basePath, "eConServiceApi.xml"); 
 //                c.IncludeXmlComments(xmlPath);
-//                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
         }
 
@@ -104,14 +113,14 @@ namespace Engineering_Project
         private NpgsqlConnectionStringBuilder SqlBuild()
         {
             NpgsqlConnectionStringBuilder sqlBuilder = new NpgsqlConnectionStringBuilder();
-            sqlBuilder.Username = "odqeztrsgnunyo";
-            sqlBuilder.Password = "a0da1a9c71bf56b78fae0936b858e3d3e367a157c8486f6a5fc77e1f9f32d596";
-            sqlBuilder.Host = "ec2-54-217-243-160.eu-west-1.compute.amazonaws.com";
+            sqlBuilder.Username = "postgres";
+            sqlBuilder.Password = "root";
+            sqlBuilder.Host = "localhost";
             sqlBuilder.Port = Int32.Parse("5432");
-            sqlBuilder.Database = "d57jgurlic9ipb";
+            sqlBuilder.Database = "enginneringProject";
             sqlBuilder.Pooling = true;
             sqlBuilder.UseSslStream = true;     
-            sqlBuilder.SslMode = Npgsql.SslMode.Require;
+            sqlBuilder.SslMode = Npgsql.SslMode.Disable;
             sqlBuilder.TrustServerCertificate = true;
 
             return sqlBuilder;
