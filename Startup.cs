@@ -44,9 +44,15 @@ namespace Engineering_Project
             
             services.AddMvc();
 
+#if DEBUG           
             services
                 .AddDbContext<Context>(options =>
-                    options.UseNpgsql(SqlBuild().ToString()));
+                    options.UseNpgsql(Configuration.GetValue<string>("ConnectionStrings:postgresql_debug")));
+#else
+            services
+                .AddDbContext<Context>(options =>
+                    options.UseNpgsql(Configuration.GetValue<string>("ConnectionStrings:postgresql_release")));
+#endif
             
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<Context>();
@@ -109,21 +115,6 @@ namespace Engineering_Project
 
             app.UseMvc();
         }
-
-        private NpgsqlConnectionStringBuilder SqlBuild()
-        {
-            NpgsqlConnectionStringBuilder sqlBuilder = new NpgsqlConnectionStringBuilder();
-            sqlBuilder.Username = "postgres";
-            sqlBuilder.Password = "root";
-            sqlBuilder.Host = "localhost";
-            sqlBuilder.Port = Int32.Parse("5432");
-            sqlBuilder.Database = "enginneringProject";
-            sqlBuilder.Pooling = true;
-            sqlBuilder.UseSslStream = true;     
-            sqlBuilder.SslMode = Npgsql.SslMode.Disable;
-            sqlBuilder.TrustServerCertificate = true;
-
-            return sqlBuilder;
-        }
+       
     }
 }

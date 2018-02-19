@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Net;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
+using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Engineering.Controllers
 {
-    [Route("api/training/")]
-    [Authorize]
+    [Route("api/trainings/")]
+    #if !DEBUG
+        [Authorize]
+    #endif
     public class TrainingController : Controller
     {
         private readonly ITrainingService _trainingService;
@@ -21,15 +25,15 @@ namespace Engineering.Controllers
         }
 
 
-        [HttpPost("date")]
-        public async Task<IActionResult> TrainingListForMonth([FromBody] Period period)
+        [HttpPost()]
+        public async Task<IActionResult> TrainingListForSelectedDate([FromBody] CurrentDisplayedDate currentDisplayedDate)
         {
-            string userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var list = await _trainingService.GetTrainingListForMonth(period.Month, period.Year, userName);
-            return Ok(new {
+//            await Task.Delay(5000);
+            string userName = DebugAuth.getUserName(User);
+            var list = await _trainingService.GetTrainingListForSelectedDate(currentDisplayedDate, userName);
+            return Ok(new{
                 data = list,
-                month = period.Month,
-                year = period.Year
+                date = currentDisplayedDate.currentDate   
             });
         }
     }

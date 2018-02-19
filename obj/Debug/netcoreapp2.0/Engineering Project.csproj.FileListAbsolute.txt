@@ -1,0 +1,10 @@
+C:\Users\Mazek\RiderProjects\Engineering Project\bin\Debug\netcoreapp2.0\Engineering Project.deps.json
+C:\Users\Mazek\RiderProjects\Engineering Project\bin\Debug\netcoreapp2.0\Engineering Project.runtimeconfig.json
+C:\Users\Mazek\RiderProjects\Engineering Project\bin\Debug\netcoreapp2.0\Engineering Project.runtimeconfig.dev.json
+C:\Users\Mazek\RiderProjects\Engineering Project\bin\Debug\netcoreapp2.0\Engineering Project.dll
+C:\Users\Mazek\RiderProjects\Engineering Project\bin\Debug\netcoreapp2.0\Engineering Project.pdb
+C:\Users\Mazek\RiderProjects\Engineering Project\obj\Debug\netcoreapp2.0\Engineering Project.csproj.CoreCompileInputs.cache
+C:\Users\Mazek\RiderProjects\Engineering Project\obj\Debug\netcoreapp2.0\Engineering Project.AssemblyInfoInputs.cache
+C:\Users\Mazek\RiderProjects\Engineering Project\obj\Debug\netcoreapp2.0\Engineering Project.AssemblyInfo.cs
+C:\Users\Mazek\RiderProjects\Engineering Project\obj\Debug\netcoreapp2.0\Engineering Project.dll
+C:\Users\Mazek\RiderProjects\Engineering Project\obj\Debug\netcoreapp2.0\Engineering Project.pdb

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Engineering_Project.DataAccess;
 using Engineering_Project.Models.Domian;
 using Engineering_Project.Models.Enums;
+using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Engineering_Project.Service.Impement
 {
@@ -20,19 +23,48 @@ namespace Engineering_Project.Service.Impement
         }
 
 
-        public async Task<List<Training>> GetTrainingListForMonth(int month, int year, string userName)
+        public async Task<List<KeyValuePair<DateTime,List<Training>>>> GetTrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
         {
             string userID = await _accountDataAccess.GetUserIdAsync(userName);
+
+            var periodOfTime = GetPeriodOfTimeForCurrentMonth(date.currentDate);
             
-            var trainingList = await _trainingDataAccess.GetTreningListForMonth(month, year, userID);
-            var output = trainingList.Select(t => new Training
-            {
-                StartTime = t.StartTime.ToDateTime(),
-                Duration = (int)(t.FinishTime.ToDateTime() - t.StartTime.ToDateTime()).TotalSeconds,
-                Type = TrainingType.WALKING,
-                Distance = 13.2
-            }).ToList();
+            var trainingList = await _trainingDataAccess.GetTreningListForMonth(periodOfTime , userID);
+            var dayList = GetDateListByPeriodOfTime(periodOfTime);
+
+            var output = dayList.ToDictionary(time => time.Date, time =>
+                trainingList
+                    .Where(t => t.StartTime.ToDateTime().Date == time.Date)
+                    .Select(t => new Training
+                    {
+                        TrainingTime = t.StartTime.ToDateTime(),
+                        Duration = (int) (t.FinishTime.ToDateTime() - t.StartTime.ToDateTime()).TotalSeconds,
+                        Type = (TrainingType) t.Type,
+                        Distance = 13.2
+                    }).ToList()).ToList();
+            
             return output;
+        }
+
+        public PeriodOfTime GetPeriodOfTimeForCurrentMonth(DateTime date)
+        {
+            var startDayOfWeek = new DateTime(date.Year, date.Month, 1);
+            var day = startDayOfWeek.DayOfWeek;
+
+            var startDay = startDayOfWeek.AddDays(-(int)day);
+
+            return new PeriodOfTime
+            {
+                StartOfThePeriod = startDay,
+                EndOfThePeriod = new DateTime(startDay.AddDays(41).Ticks)
+            };
+        }
+
+        public List<DateTime> GetDateListByPeriodOfTime(PeriodOfTime periodOfTime)
+        {
+            return Enumerable.Range(0, 1 + periodOfTime.EndOfThePeriod.Subtract(periodOfTime.StartOfThePeriod).Days)
+                .Select(offset => periodOfTime.StartOfThePeriod.AddDays(offset).Date)
+                .ToList(); 
         }
     }
 }

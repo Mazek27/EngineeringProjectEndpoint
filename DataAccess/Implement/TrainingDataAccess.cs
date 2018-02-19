@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Engineering_Project.Models.Entity;
+using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +15,22 @@ namespace Engineering_Project.DataAccess
         {
         }
         
-        public Task<List<Training>> GetTreningListForMonth(int month, int year, string userID)
+        public Task<List<Training>> GetTreningListForMonth(PeriodOfTime periodOfTime, string userID)
         {
+            var startOfThePeriod = new DateTime(
+                periodOfTime.StartOfThePeriod.Year,
+                periodOfTime.StartOfThePeriod.Month,
+                periodOfTime.StartOfThePeriod.Day,
+                0, 0, 0);
+            var endOfThePeriod = new DateTime(
+                periodOfTime.EndOfThePeriod.Year,
+                periodOfTime.EndOfThePeriod.Month,
+                periodOfTime.EndOfThePeriod.Day,
+                23, 59, 59);
+            
             return _Context.Trainings
                 .AsNoTracking()
-                .Where(t => t.StartTime.Month == month && t.StartTime.Year == year && t.UserId == userID)
+                .Where(t => t.StartTime >= startOfThePeriod && t.FinishTime <= endOfThePeriod && t.UserId == userID)
                 .ToListAsync();
         }
     }
