@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Engineering_Project.Models.Domian.Workout;
 using Engineering_Project.Models.Entity;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Context;
@@ -32,6 +33,25 @@ namespace Engineering_Project.DataAccess
                 .AsNoTracking()
                 .Where(t => t.StartTime >= startOfThePeriod && t.FinishTime <= endOfThePeriod && t.UserId == userID)
                 .ToListAsync();
+        }
+
+//        public Task<PeriodOfTime> GetPeriodOfTimeForWorkoutById(int id)
+//        {
+//            
+//        }
+        
+
+        public Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
+        {
+            return _Context.Localizations
+                .Where(l => l.TrainingId == id)
+                .OrderByDescending(l => l.MeasurementTime)
+                .Select(l => new WorkoutGeoLocalization
+                {
+                    Time = l.MeasurementTime,
+                    Lat = l.Lat,
+                    Lng = l.Lng
+                }).ToListAsync();
         }
     }
 }

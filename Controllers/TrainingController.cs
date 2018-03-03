@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Engineering_Project.Models.Domian.Workout;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
 using Engineering_Project.Service.Security;
@@ -36,5 +38,13 @@ namespace Engineering.Controllers
                 date = currentDisplayedDate.currentDate   
             });
         }
+
+        [HttpGet("{id}")]
+        public async Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
+        {
+            return await _trainingService.GetGeoLocalizationForWorkoutById(id);
+        }
+        
+        
     }
 }

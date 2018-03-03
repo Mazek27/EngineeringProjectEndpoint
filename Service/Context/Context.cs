@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using System.Spatial;
 using Engineering_Project.Models.Entity;
 using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Engineering_Project.Service.Context
 //    public class Context : DbContext
     {
         public DbSet<Training> Trainings { get; set; }
+        public DbSet<Localization> Localizations { get; set; }
         
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -17,12 +19,12 @@ namespace Engineering_Project.Service.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Training>().HasAlternateKey(p => p.Id);
-            builder.Entity<Training>().HasAlternateKey(p => p.Id);
-//            builder.Entity<Training>().HasKey(t => new
-//            {
-//                t.Id, t.UserId
-//            });
+//            builder.Entity<Training>().HasAlternateKey(p => p.Id);
+//            builder.Entity<Training>().HasAlternateKey(p => p.Id);
+////            builder.Entity<Training>().HasKey(t => new
+////            {
+////                t.Id, t.UserId
+////            });
             
             base.OnModelCreating(builder);
         }

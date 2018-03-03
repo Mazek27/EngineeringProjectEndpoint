@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Engineering_Project.DataAccess;
 using Engineering_Project.Models.Domian;
+using Engineering_Project.Models.Domian.Workout;
 using Engineering_Project.Models.Enums;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
@@ -23,7 +24,7 @@ namespace Engineering_Project.Service.Impement
         }
 
 
-        public async Task<List<KeyValuePair<DateTime,List<Training>>>> GetTrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
+        public async Task<List<KeyValuePair<DateTime, DayData>>> GetTrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
         {
             string userID = await _accountDataAccess.GetUserIdAsync(userName);
 
@@ -33,15 +34,20 @@ namespace Engineering_Project.Service.Impement
             var dayList = GetDateListByPeriodOfTime(periodOfTime);
 
             var output = dayList.ToDictionary(time => time.Date, time =>
-                trainingList
-                    .Where(t => t.StartTime.ToDateTime().Date == time.Date)
-                    .Select(t => new Training
-                    {
-                        TrainingTime = t.StartTime.ToDateTime(),
-                        Duration = (int) (t.FinishTime.ToDateTime() - t.StartTime.ToDateTime()).TotalSeconds,
-                        Type = (TrainingType) t.Type,
-                        Distance = 13.2
-                    }).ToList()).ToList();
+                new DayData
+                {
+                    Type = time.Month == date.currentDate.Month ? 'c' : time.Month < date.currentDate.Month ? 'p' : 'n',
+                    TrainingList = trainingList
+                        .Where(t => t.StartTime.ToDateTime().Date == time.Date)
+                        .Select(t => new Training
+                        {
+                            Id = t.Id,
+                            TrainingTime = t.StartTime.ToDateTime(),
+                            Duration = (int) (t.FinishTime.ToDateTime() - t.StartTime.ToDateTime()).TotalSeconds,
+                            Type = (TrainingType) t.Type,
+                            Distance = 13.2
+                        }).ToList()
+                }).ToList();
             
             return output;
         }
@@ -65,6 +71,11 @@ namespace Engineering_Project.Service.Impement
             return Enumerable.Range(0, 1 + periodOfTime.EndOfThePeriod.Subtract(periodOfTime.StartOfThePeriod).Days)
                 .Select(offset => periodOfTime.StartOfThePeriod.AddDays(offset).Date)
                 .ToList(); 
+        }
+
+        public async Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
+        {
+            return await _trainingDataAccess.GetGeoLocalizationForWorkoutById(id);
         }
     }
 }
