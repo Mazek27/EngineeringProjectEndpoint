@@ -83,6 +83,8 @@ namespace Engineering_Project
             
             //Services
             services.AddTransient<ITrainingService, TrainingService>();
+            services.AddTransient<IInternationalizationService, InternationalizationService>();
+            
             
             services.AddSwaggerGen(c =>
             {

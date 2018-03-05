@@ -5,7 +5,7 @@ using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace eConService.Controllers
+namespace Engineering_Project.Controllers
 {
     [Route("api/users/")]
 //    [Authorize]

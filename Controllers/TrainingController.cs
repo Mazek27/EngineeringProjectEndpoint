@@ -10,8 +10,9 @@ using Engineering_Project.Service.Interfaces;
 using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.KeyVault.Models;
 
-namespace Engineering.Controllers
+namespace Engineering_Project.Controllers
 {
     [Route("api/trainings/")]
     #if !DEBUG
@@ -30,12 +31,12 @@ namespace Engineering.Controllers
         [HttpPost()]
         public async Task<IActionResult> TrainingListForSelectedDate([FromBody] CurrentDisplayedDate currentDisplayedDate)
         {
-//            await Task.Delay(5000);
             string userName = DebugAuth.getUserName(User);
             var list = await _trainingService.GetTrainingListForSelectedDate(currentDisplayedDate, userName);
-            return Ok(new{
+            return Ok(new
+            {
                 data = list,
-                date = currentDisplayedDate.currentDate   
+                date = currentDisplayedDate.currentDate
             });
         }
 
