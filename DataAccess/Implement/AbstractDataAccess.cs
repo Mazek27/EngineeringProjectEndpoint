@@ -4,11 +4,11 @@ namespace Engineering_Project.DataAccess
 {
     public abstract class AbstractDataAccess
     {
-        protected Context _Context { get; set; }
+        protected ApplicationContext ApplicationContext { get; set; }
 
-        public AbstractDataAccess(Context context)
+        public AbstractDataAccess(ApplicationContext applicationContext)
         {
-            _Context = context;
+            ApplicationContext = applicationContext;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Engineering_Project.Service.Impement
 
         public async Task<List<KeyValuePair<DateTime, DayData>>> GetTrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
         {
-            string userID = await _accountDataAccess.GetUserIdAsync(userName);
+            Guid userID = await _accountDataAccess.GetUserIdAsync(userName);
 
             var periodOfTime = GetPeriodOfTimeForCurrentMonth(date.currentDate);
             
@@ -38,12 +38,12 @@ namespace Engineering_Project.Service.Impement
                 {
                     Type = time.Month == date.currentDate.Month ? 'c' : time.Month < date.currentDate.Month ? 'p' : 'n',
                     TrainingList = trainingList
-                        .Where(t => t.StartTime.ToDateTime().Date == time.Date)
+                        .Where(t => t.StartTime.Date == time.Date)
                         .Select(t => new Training
                         {
                             Id = t.Id,
-                            TrainingTime = t.StartTime.ToDateTime(),
-                            Duration = (int) (t.FinishTime.ToDateTime() - t.StartTime.ToDateTime()).TotalSeconds,
+                            TrainingTime = t.StartTime,
+                            Duration = (int) (t.FinishTime - t.StartTime).TotalSeconds,
                             Type = (TrainingType) t.Type,
                             Distance = 13.2
                         }).ToList()

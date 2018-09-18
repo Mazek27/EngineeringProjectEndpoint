@@ -5,18 +5,17 @@ namespace Engineering_Project.Models.Transmit
     public class UserRegisterTransmitModel
     {
         [Required]
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]
+        [Phone]
         public string PhoneNumber { get; set; }
         [Required]
         [DataType(DataType.Password)] 
         public string Password { get; set; }
-        [Required]
-        public string ApplicationRoleName { get; set; } 
-        [Required]
+        public string ApplicationRoleName { get; set; }
         public string Locale { get; set; }
     }
 }

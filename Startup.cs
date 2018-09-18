@@ -14,6 +14,7 @@ using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,16 +47,17 @@ namespace Engineering_Project
 
 #if DEBUG           
             services
-                .AddDbContext<Context>(options =>
+                .AddDbContext<ApplicationContext>(options =>
                     options.UseNpgsql(Configuration.GetValue<string>("ConnectionStrings:postgresql_debug")));
 #else
             services
                 .AddDbContext<Context>(options =>
                     options.UseNpgsql(Configuration.GetValue<string>("ConnectionStrings:postgresql_release")));
 #endif
-            
+
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<Context>();
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders();
             
             services.AddAuthentication(options => {
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -99,7 +101,7 @@ namespace Engineering_Project
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationContext dbContext)
         {
             
             app.UseCors("AllowAll");

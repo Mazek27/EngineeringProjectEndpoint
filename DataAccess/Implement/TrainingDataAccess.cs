@@ -12,11 +12,11 @@ namespace Engineering_Project.DataAccess
 {
     public class TrainingDataAccess : AbstractDataAccess, ITrainingDataAccess
     {
-        public TrainingDataAccess(Context context) : base(context)
+        public TrainingDataAccess(ApplicationContext applicationContext) : base(applicationContext)
         {
         }
         
-        public Task<List<Training>> GetTreningListForMonth(PeriodOfTime periodOfTime, string userID)
+        public Task<List<Training>> GetTreningListForMonth(PeriodOfTime periodOfTime, Guid userID)
         {
             var startOfThePeriod = new DateTime(
                 periodOfTime.StartOfThePeriod.Year,
@@ -28,11 +28,14 @@ namespace Engineering_Project.DataAccess
                 periodOfTime.EndOfThePeriod.Month,
                 periodOfTime.EndOfThePeriod.Day,
                 23, 59, 59);
+
+            return null;
             
-            return _Context.Trainings
-                .AsNoTracking()
-                .Where(t => t.StartTime >= startOfThePeriod && t.FinishTime <= endOfThePeriod && t.UserId == userID)
-                .ToListAsync();
+
+//            return _Context.Trainings
+//                .AsNoTracking()
+//                .Where(t => t.StartTime >= startOfThePeriod && t.FinishTime <= endOfThePeriod && t.UserId == userID)
+//                .ToListAsync();
         }
 
 //        public Task<PeriodOfTime> GetPeriodOfTimeForWorkoutById(int id)
@@ -43,15 +46,16 @@ namespace Engineering_Project.DataAccess
 
         public Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
         {
-            return _Context.Localizations
-                .Where(l => l.TrainingId == id)
-                .OrderByDescending(l => l.MeasurementTime)
-                .Select(l => new WorkoutGeoLocalization
-                {
-                    Time = l.MeasurementTime,
-                    Lat = l.Lat,
-                    Lng = l.Lng
-                }).ToListAsync();
+            return null;
+//            return _Context.Localizations
+//                .Where(l => l.TrainingId == id)
+//                .OrderByDescending(l => l.MeasurementTime)
+//                .Select(l => new WorkoutGeoLocalization
+//                {
+//                    Time = l.MeasurementTime,
+//                    Lat = l.Lat,
+//                    Lng = l.Lng
+//                }).ToListAsync();
         }
     }
 }

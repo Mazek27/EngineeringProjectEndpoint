@@ -52,7 +52,9 @@ namespace Engineering_Project.DataAccess
                 UserName = model.UserName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                Locale = model.Locale
+                Locale = model.Locale,
+                SecurityStamp = Guid.NewGuid().ToString()
+                
             };
 
             IdentityResult createResult = await _userManager.CreateAsync(user, model.Password);
@@ -89,7 +91,7 @@ namespace Engineering_Project.DataAccess
             return addResult.Succeeded;
         }
 
-        public async Task<string> GetUserIdAsync(string userName)
+        public async Task<Guid> GetUserIdAsync(string userName)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(userName);
             return user.Id;
