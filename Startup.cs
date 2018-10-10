@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engineering_Project.Controllers;
 using Engineering_Project.DataAccess;
+using Engineering_Project.Extensions;
 using Engineering_Project.Models.Domian;
 using Engineering_Project.Service.Context;
 using Engineering_Project.Service.Impement;
@@ -86,18 +87,19 @@ namespace Engineering_Project
             //Services
             services.AddTransient<ITrainingService, TrainingService>();
             services.AddTransient<IInternationalizationService, InternationalizationService>();
-            
-            
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v2", new Info {Title = "eConService Api", Version = "v2"});
-                c.CustomSchemaIds(x => x.FullName);
-                 
-//                string basePath = PlatformServices.Default.Application.ApplicationBasePath;
-//                string xmlPath = Path.Combine(basePath, "eConServiceApi.xml"); 
-//                c.IncludeXmlComments(xmlPath);
-                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
-            });
+
+
+            services.AddSwaggerDocumentation();
+//            services.AddSwaggerGen(c =>
+//            {
+//                c.SwaggerDoc("v2", new Info {Title = "eConService Api", Version = "v2"});
+//                c.CustomSchemaIds(x => x.FullName);
+//                 
+////                string basePath = PlatformServices.Default.Application.ApplicationBasePath;
+////                string xmlPath = Path.Combine(basePath, "eConServiceApi.xml"); 
+////                c.IncludeXmlComments(xmlPath);
+//                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+//            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,12 +112,13 @@ namespace Engineering_Project
             
             app.UseStaticFiles();
             
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "eConService Api V2");
-                c.InjectStylesheet(AppDomain.CurrentDomain.BaseDirectory, "outline");
-            });
+            app.UseSwaggerDocumentation();
+//            app.UseSwagger();
+//            app.UseSwaggerUI(c =>
+//            {
+//                c.SwaggerEndpoint("/swagger/v2/swagger.json", "eConService Api V2");
+//                c.InjectStylesheet(AppDomain.CurrentDomain.BaseDirectory, "outline");
+//            });
 
             app.UseMvc();
         }

@@ -12,8 +12,8 @@ namespace Engineering_Project.Service.Context
     public class ApplicationContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 //    public class Context : DbContext
     {
-        public DbSet<Training> Trainings { get; set; }
-        public DbSet<Localization> Localizations { get; set; }
+//        public DbSet<Training> Trainings { get; set; }
+//        public DbSet<Localization> Localizations { get; set; }
         
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {

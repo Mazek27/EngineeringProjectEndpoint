@@ -73,7 +73,7 @@ namespace Engineering_Project.DataAccess
                     return true;
             }
 
-            await _userManager.DeleteAsync(user);
+//            await _userManager.DeleteAsync(user);
             return false;
         }
 
