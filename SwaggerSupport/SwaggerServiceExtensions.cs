@@ -3,10 +3,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace Engineering_Project.Extensions
+namespace Engineering_Project.SwaggerSupport
 {
     public static class SwaggerServiceExtensions
     {
+        public static IServiceCollection InitSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<FileUploadOperation>();
+            });
+
+            return services;
+        }
+        
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>

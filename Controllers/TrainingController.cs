@@ -9,6 +9,7 @@ using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
 using Engineering_Project.Service.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.KeyVault.Models;
 
@@ -44,6 +45,14 @@ namespace Engineering_Project.Controllers
         public async Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
         {
             return await _trainingService.GetGeoLocalizationForWorkoutById(id);
+        }
+
+
+        [HttpPost("upload_gpx")]
+        public async Task<IActionResult> UploadTrainingFromGpxFile(IFormFile FilePayload)
+        {
+            GpxFileManager.DecodeGpxFile(FilePayload);
+            return Ok();
         }
         
         

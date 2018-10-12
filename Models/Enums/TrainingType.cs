@@ -4,7 +4,7 @@
     {
         CYCLING_INDOOR,
         CYCLING_SPORT,
-        CYCLING_TRANSPORT,
+        CYCLING_TRANSPORTATION,
         GOLFING,
         HIKING,
         KAYAKING,

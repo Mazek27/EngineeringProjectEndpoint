@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engineering_Project.Controllers;
 using Engineering_Project.DataAccess;
-using Engineering_Project.Extensions;
+using Engineering_Project.SwaggerSupport;
 using Engineering_Project.Models.Domian;
 using Engineering_Project.Service.Context;
 using Engineering_Project.Service.Impement;
@@ -89,7 +89,9 @@ namespace Engineering_Project
             services.AddTransient<IInternationalizationService, InternationalizationService>();
 
 
-            services.AddSwaggerDocumentation();
+            services
+                .AddSwaggerDocumentation()
+                .InitSwagger();
 //            services.AddSwaggerGen(c =>
 //            {
 //                c.SwaggerDoc("v2", new Info {Title = "eConService Api", Version = "v2"});
@@ -111,8 +113,9 @@ namespace Engineering_Project
             app.UseAuthentication();
             
             app.UseStaticFiles();
-            
+
             app.UseSwaggerDocumentation();
+           
 //            app.UseSwagger();
 //            app.UseSwaggerUI(c =>
 //            {

@@ -39,7 +39,7 @@ namespace Engineering_Project.Service.Impement
                     Type = time.Month == date.currentDate.Month ? 'c' : time.Month < date.currentDate.Month ? 'p' : 'n',
                     TrainingList = trainingList
                         .Where(t => t.StartTime.Date == time.Date)
-                        .Select(t => new Training
+                        .Select(t => new TrainingDetail
                         {
                             Id = t.Id,
                             TrainingTime = t.StartTime,
