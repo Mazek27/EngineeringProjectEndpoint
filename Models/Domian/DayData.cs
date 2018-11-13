@@ -8,6 +8,6 @@ namespace Engineering_Project.Models.Domian
     {
         public char Type { get; set; }
 
-        public List<Training> TrainingList { get; set; }
+        public List<WorkoutDomain> TrainingList { get; set; }
     }
 }

@@ -6,19 +6,21 @@ using NpgsqlTypes;
 namespace Engineering_Project.Models.Entity
 {
     [ComplexType]
-    [Table("Training")]
+    [Table("Trainings")]
     public class Training
     {
         [Key] 
-//        [Key]
         public int Id { get; set; }
         [Column("UserId")]
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         [Column("Type")]
         public int Type { get; set; }
-        [Column("StartTime")]
-        public NpgsqlDateTime StartTime { get; set; }
-        [Column("FinishTime")]
-        public NpgsqlDateTime FinishTime { get; set; }
+        [Column("TrainingTime")]
+        public DateTime TrainingTime { get; set; }
+        [Column("Detail")]
+        public string Detail { get; set; }
+        [Column("Gps")]
+        public string Gps { get; set; }
+        
     }
 }

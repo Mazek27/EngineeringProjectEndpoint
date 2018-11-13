@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Engineering_Project.DataAccess;
 using Engineering_Project.Models.Transmit;
 using Engineering_Project.Service.Security;
@@ -22,6 +23,8 @@ namespace Engineering_Project.Controllers
 //        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddUser([FromBody] UserRegisterTransmitModel model)
         {
+            model.Locale =  this.Request.Headers["Accept-Language"].ToString().Split(",")[0];
+            model.ApplicationRoleName = "User";
             if (!ModelState.IsValid || !await _dataAccess.AddUser(model))
             {
                 return BadRequest("Invalid user definition");
@@ -65,7 +68,7 @@ namespace Engineering_Project.Controllers
             try
             {
                 ApplicationRole role = new ApplicationRole();
-                role.Id = model.Id;
+                role.Id = Guid.NewGuid();
                 role.Name = model.RoleName;
 
                 

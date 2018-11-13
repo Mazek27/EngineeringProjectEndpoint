@@ -52,7 +52,9 @@ namespace Engineering_Project.DataAccess
                 UserName = model.UserName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                Locale = model.Locale
+                Locale = model.Locale,
+                SecurityStamp = Guid.NewGuid().ToString()
+                
             };
 
             IdentityResult createResult = await _userManager.CreateAsync(user, model.Password);
@@ -71,7 +73,7 @@ namespace Engineering_Project.DataAccess
                     return true;
             }
 
-            await _userManager.DeleteAsync(user);
+//            await _userManager.DeleteAsync(user);
             return false;
         }
 
@@ -89,7 +91,7 @@ namespace Engineering_Project.DataAccess
             return addResult.Succeeded;
         }
 
-        public async Task<string> GetUserIdAsync(string userName)
+        public async Task<Guid> GetUserIdAsync(string userName)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(userName);
             return user.Id;
@@ -122,14 +124,14 @@ namespace Engineering_Project.DataAccess
                         audience:
                         "!de&6Yw8GgcG9!^MQ9Qg4FYv*Ggm8RcpJ93yZUj%z9*6VU62%aXKjU7$ND#*X$jbG@k$CB@7%y*X%qb25r&!#y",
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(5),
+                        expires: DateTime.UtcNow.AddMinutes(60),
                         signingCredentials: creds
                     );
 
                     var result = (new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = (5 / 60.0 / 24.0),
+                        expiration = (60 / 60.0 / 24.0),
                         name = user.UserName,
                         locale = user.Locale
                     });

@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Engineering_Project.Models.Domian;
 using Engineering_Project.Models.Domian.Workout;
 using Engineering_Project.Models.Entity;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Context;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Engineering_Project.DataAccess
 {
     public class TrainingDataAccess : AbstractDataAccess, ITrainingDataAccess
     {
-        public TrainingDataAccess(Context context) : base(context)
+        public TrainingDataAccess(ApplicationContext applicationContext) : base(applicationContext)
         {
         }
         
-        public Task<List<Training>> GetTreningListForMonth(PeriodOfTime periodOfTime, string userID)
+        public Task<List<Training>> GetTreningListForMonth(PeriodOfTime periodOfTime, Guid userID)
         {
             var startOfThePeriod = new DateTime(
                 periodOfTime.StartOfThePeriod.Year,
@@ -28,10 +30,10 @@ namespace Engineering_Project.DataAccess
                 periodOfTime.EndOfThePeriod.Month,
                 periodOfTime.EndOfThePeriod.Day,
                 23, 59, 59);
-            
-            return _Context.Trainings
+
+            return ApplicationContext.Trainings
                 .AsNoTracking()
-                .Where(t => t.StartTime >= startOfThePeriod && t.FinishTime <= endOfThePeriod && t.UserId == userID)
+                .Where(t => t.TrainingTime >= startOfThePeriod && t.TrainingTime <= endOfThePeriod && t.UserId == userID)
                 .ToListAsync();
         }
 
@@ -41,17 +43,36 @@ namespace Engineering_Project.DataAccess
 //        }
         
 
-        public Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
+        public Task<List<WorkoutTransmit>> WorkoutById(int id)
         {
-            return _Context.Localizations
-                .Where(l => l.TrainingId == id)
-                .OrderByDescending(l => l.MeasurementTime)
-                .Select(l => new WorkoutGeoLocalization
-                {
-                    Time = l.MeasurementTime,
-                    Lat = l.Lat,
-                    Lng = l.Lng
-                }).ToListAsync();
+            return ApplicationContext.Trainings
+                .Where(l => l.Id == id)
+                .OrderByDescending(l => l.TrainingTime)
+                .Select(training => new WorkoutTransmit(training))
+                .ToListAsync();
+        }
+
+        public void InsertTraining(WorkoutDomain workoutDomain)
+        {
+            Training training = new Training
+            {
+                Type = (int) workoutDomain.Type,
+                UserId = workoutDomain.UserId,
+                TrainingTime = workoutDomain.TrainingTime,
+                Detail = JsonConvert.SerializeObject(workoutDomain.WorkoutDetail),
+                Gps = JsonConvert.SerializeObject(workoutDomain.Localizations)
+            };
+
+            ApplicationContext.Trainings.Add(training);
+            ApplicationContext.SaveChanges();
+        }
+
+        public Task<List<WorkoutTransmit>> TrainingList(Guid userId)
+        {
+            return ApplicationContext.Trainings
+                .Where(t => t.UserId == userId)
+                .Select(t => new WorkoutTransmit(t))
+                .ToListAsync();
         }
     }
 }
