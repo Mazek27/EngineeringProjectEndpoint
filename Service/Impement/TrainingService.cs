@@ -8,7 +8,9 @@ using Engineering_Project.Models.Domian.Workout;
 using Engineering_Project.Models.Enums;
 using Engineering_Project.Models.Transmit.Training;
 using Engineering_Project.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 
 namespace Engineering_Project.Service.Impement
 {
@@ -23,8 +25,23 @@ namespace Engineering_Project.Service.Impement
             _accountDataAccess = accountDataAccess;
         }
 
+        public async Task<bool> InsertTraining(IFormFile file, string userName)
+        {
+            WorkoutDomain workoutDomain = GpxFileManager.DecodeGpxFile(file);
+            workoutDomain.UserId = await _accountDataAccess.GetUserIdAsync(userName);
+            _trainingDataAccess.InsertTraining(workoutDomain);
 
-        public async Task<List<KeyValuePair<DateTime, DayData>>> GetTrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
+            return true;
+        }
+
+        public async Task<List<WorkoutTransmit>> TrainingList(string userName)
+        {
+            var userId = await _accountDataAccess.GetUserIdAsync(userName);
+            return await _trainingDataAccess.TrainingList(userId);
+        }
+
+
+        public async Task<List<KeyValuePair<DateTime, DayData>>> TrainingListForSelectedDate(CurrentDisplayedDate date, string userName)
         {
             Guid userID = await _accountDataAccess.GetUserIdAsync(userName);
 
@@ -38,18 +55,25 @@ namespace Engineering_Project.Service.Impement
                 {
                     Type = time.Month == date.currentDate.Month ? 'c' : time.Month < date.currentDate.Month ? 'p' : 'n',
                     TrainingList = trainingList
-                        .Where(t => t.StartTime.Date == time.Date)
-                        .Select(t => new TrainingDetail
+                        .Where(t => t.TrainingTime.Date == time.Date.Date)
+                        .Select(t => new WorkoutDomain
                         {
+                            
                             Id = t.Id,
-                            TrainingTime = t.StartTime,
-                            Duration = (int) (t.FinishTime - t.StartTime).TotalSeconds,
+                            UserId = t.UserId,
+                            TrainingTime = t.TrainingTime,
+                            WorkoutDetail = JsonConvert.DeserializeObject<WorkoutDetail>(t.Detail),
+                            Localizations = DeserializeLocalizations(t.Gps).ToList(),
                             Type = (TrainingType) t.Type,
-                            Distance = 13.2
                         }).ToList()
                 }).ToList();
             
             return output;
+        }
+
+        private IList<Coordinate> DeserializeLocalizations(string gps)
+        {
+            return JsonConvert.DeserializeObject<IList<Coordinate>>(gps);
         }
 
         public PeriodOfTime GetPeriodOfTimeForCurrentMonth(DateTime date)
@@ -73,9 +97,9 @@ namespace Engineering_Project.Service.Impement
                 .ToList(); 
         }
 
-        public async Task<List<WorkoutGeoLocalization>> GetGeoLocalizationForWorkoutById(int id)
+        public async Task<List<WorkoutTransmit>> WorkoutById(int id)
         {
-            return await _trainingDataAccess.GetGeoLocalizationForWorkoutById(id);
+            return await _trainingDataAccess.WorkoutById(id);
         }
     }
 }

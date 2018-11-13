@@ -10,15 +10,17 @@ namespace Engineering_Project.Models.Entity
     public class Training
     {
         [Key] 
-//        [Key]
         public int Id { get; set; }
         [Column("UserId")]
         public Guid UserId { get; set; }
         [Column("Type")]
         public int Type { get; set; }
-        [Column("StartTime")]
-        public DateTime StartTime { get; set; }
-        [Column("FinishTime")]
-        public DateTime FinishTime { get; set; }
+        [Column("TrainingTime")]
+        public DateTime TrainingTime { get; set; }
+        [Column("Detail")]
+        public string Detail { get; set; }
+        [Column("Gps")]
+        public string Gps { get; set; }
+        
     }
 }

@@ -124,14 +124,14 @@ namespace Engineering_Project.DataAccess
                         audience:
                         "!de&6Yw8GgcG9!^MQ9Qg4FYv*Ggm8RcpJ93yZUj%z9*6VU62%aXKjU7$ND#*X$jbG@k$CB@7%y*X%qb25r&!#y",
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(5),
+                        expires: DateTime.UtcNow.AddMinutes(60),
                         signingCredentials: creds
                     );
 
                     var result = (new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = (5 / 60.0 / 24.0),
+                        expiration = (60 / 60.0 / 24.0),
                         name = user.UserName,
                         locale = user.Locale
                     });

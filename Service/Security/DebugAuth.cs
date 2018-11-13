@@ -8,11 +8,12 @@ namespace Engineering_Project.Service.Security
         
         public static string getUserName(ClaimsPrincipal User)
         {
-            #if DEBUG
-                return userName;
-            #else
-                return User.FindFirstValue(ClaimTypes.NameIdentifier);
-            #endif
+//            #if DEBUG
+//                return userName;
+//            #else
+            var userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return userName;
+//            #endif
         }
     }
 }
